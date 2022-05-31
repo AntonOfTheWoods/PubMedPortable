@@ -14,7 +14,7 @@ from sqlalchemy import *
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relation, backref
-
+from base import Base
 
 """
     Build tables, classes, and mappings
@@ -24,7 +24,8 @@ from sqlalchemy.orm import relation, backref
 
 SCHEMA = "pubmed"
 
-Base = declarative_base()
+
+# Base = declarative_base()
 
 class Citation(Base):
     __tablename__ = "tbl_medline_citation"
@@ -74,7 +75,7 @@ class Citation(Base):
         CheckConstraint("article_author_list_comp_yn IN ('Y', 'N', 'y', 'n')", name='ck4_medline_citation'),
         CheckConstraint("data_bank_list_complete_yn IN ('Y', 'N', 'y', 'n')", name='ck5_medline_citation'),
         CheckConstraint("grant_list_complete_yn IN ('Y', 'N', 'y', 'n')", name='ck6_medline_citation'),
-        {'schema': SCHEMA} 
+        {'schema': SCHEMA}
     )
 
 
@@ -97,7 +98,7 @@ class PMID_File_Mapping(Base):
         ForeignKeyConstraint(['id_file','xml_file_name'], [SCHEMA+'.tbl_xml_file.id',SCHEMA+'.tbl_xml_file.xml_file_name'], onupdate="CASCADE", ondelete="CASCADE", name='fk3_pmids_in_file'),
         ForeignKeyConstraint(['fk_pmid'], [SCHEMA+'.tbl_medline_citation.pmid'], onupdate="CASCADE", ondelete="CASCADE", name="fk2_pmids_in_file"),
         PrimaryKeyConstraint( 'fk_pmid'),
-        {'schema': SCHEMA} 
+        {'schema': SCHEMA}
     )
 
 
@@ -125,7 +126,7 @@ class XMLFile(Base):
 
     __table_args__  = (
         PrimaryKeyConstraint('id','xml_file_name'),
-        {'schema': SCHEMA} 
+        {'schema': SCHEMA}
     )
 
 
@@ -736,4 +737,3 @@ if __name__ == "__main__":
 
     (options, args) = parser.parse_args()
     init(options.database)
-

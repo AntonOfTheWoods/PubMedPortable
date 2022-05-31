@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:15beta1
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+volumes:
+  db-data:
+  files-data:
