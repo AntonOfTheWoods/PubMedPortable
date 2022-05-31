@@ -8,11 +8,7 @@
     http://biotext.berkeley.edu/code/medline-schema/medline-schema-perl-oracle.sql
 """
 
-import sys
-import sqlalchemy.types as types
 from sqlalchemy import *
-import sqlalchemy
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relation, backref
 from base import Base
 
@@ -25,10 +21,7 @@ from base import Base
 SCHEMA = "pubmed"
 
 
-# Base = declarative_base()
-
 class Citation(Base):
-    __tablename__ = "tbl_medline_citation"
     pmid                            = Column(INTEGER, nullable=False, primary_key=True)
     date_created                    = Column(DATE)
     date_completed                  = Column(DATE, index=True)
@@ -80,7 +73,6 @@ class Citation(Base):
 
 
 class PMID_File_Mapping(Base):
-    __tablename__ = "tbl_pmids_in_file"
     id_file = Column(Integer)
     xml_file_name   = Column(VARCHAR(50), nullable=False)
     fk_pmid            = Column(INTEGER, nullable=False)
@@ -103,7 +95,6 @@ class PMID_File_Mapping(Base):
 
 
 class XMLFile(Base):
-    __tablename__ = "tbl_xml_file"
 
     id = Column(Integer, nullable=False, autoincrement=True)
     xml_file_name = Column(VARCHAR(50), nullable=False)
@@ -131,7 +122,6 @@ class XMLFile(Base):
 
 
 class Journal(Base):
-    __tablename__ = "tbl_journal"
 
     fk_pmid                = Column(INTEGER, nullable=False, primary_key=True)
     issn                = Column(VARCHAR(30), index=True)
@@ -168,7 +158,6 @@ class Journal(Base):
 
 
 class JournalInfo(Base):
-    __tablename__ = "tbl_medline_journal_info"
 
     fk_pmid            = Column(INTEGER, nullable=False, primary_key=True)
     nlm_unique_id   = Column(VARCHAR(20), index=True)
@@ -192,7 +181,6 @@ class JournalInfo(Base):
 
 
 class Abstract(Base):
-    __tablename__ = "tbl_abstract"
 
     fk_pmid                        = Column(INTEGER, nullable=False)
     abstract_text               = Column(Text)
@@ -214,7 +202,6 @@ class Abstract(Base):
 
 
 class Chemical(Base):
-    __tablename__ = "tbl_chemical"
     fk_pmid                    = Column(INTEGER, nullable=False)
     registry_number         = Column(VARCHAR(20), nullable=False)
     name_of_substance       = Column(VARCHAR(3000), nullable=False, index=True)
@@ -237,8 +224,6 @@ class Chemical(Base):
 
 
 class CitationSubset(Base):
-    __tablename__ = "tbl_citation_subset"
-
     fk_pmid                = Column(INTEGER, nullable=False)
     citation_subset     = Column(VARCHAR(500), nullable=False)
 
@@ -257,8 +242,6 @@ class CitationSubset(Base):
 
 
 class Comment(Base):
-    __tablename__ = "tbl_comments_correction"
-
     id                      = Column(Integer, primary_key=True)
     fk_pmid                 = Column(INTEGER, nullable=False, index = True)
     ref_type                = Column(VARCHAR(21), nullable=False)
@@ -281,8 +264,6 @@ class Comment(Base):
 
 
 class GeneSymbol(Base):
-    __tablename__ = "tbl_gene_symbol"
-
     fk_pmid            = Column(INTEGER, nullable=False)
     gene_symbol     = Column(VARCHAR(40), nullable=False, index=True) #a bug in one medlin entry causes an increase to 40, from 30
 
@@ -302,8 +283,6 @@ class GeneSymbol(Base):
 
 
 class MeSHHeading(Base):
-    __tablename__ = "tbl_mesh_heading"
-
     fk_pmid                     = Column(INTEGER, nullable=False)
     descriptor_name             = Column(VARCHAR(500))
     descriptor_name_major_yn    = Column(CHAR(1), default='N')
@@ -327,8 +306,6 @@ class MeSHHeading(Base):
 
 
 class Qualifier(Base):
-    __tablename__ = "tbl_qualifier_name"
-
     fk_pmid                        = Column(INTEGER, nullable=False)
     descriptor_name             = Column(VARCHAR(500), index=True)
     qualifier_name              = Column(VARCHAR(500), index=True)
@@ -354,8 +331,6 @@ class Qualifier(Base):
 
 
 class PersonalName(Base):
-    __tablename__ = "tbl_personal_name_subject"
-
     id                  = Column(Integer, primary_key=True)
     fk_pmid                = Column(INTEGER, nullable=False)
     last_name           = Column(VARCHAR(300), nullable=False, index=True)
@@ -380,8 +355,6 @@ class PersonalName(Base):
 
 
 class OtherAbstract(Base):
-    __tablename__ = "tbl_other_abstract"
-
     fk_pmid                = Column(INTEGER, nullable=False)
 #    other_abstract_id            = Column(VARCHAR(30), nullable=False)
 #    other_abstract_source     = Column(VARCHAR(20), nullable=False)
@@ -404,8 +377,6 @@ class OtherAbstract(Base):
     citation = relation(Citation, backref=backref('other_abstracts', order_by=fk_pmid, cascade="all, delete-orphan"))
 
 class OtherID(Base):
-    __tablename__ = "tbl_other_id"
-
     fk_pmid             = Column(INTEGER, nullable=False)
     other_id            = Column(VARCHAR(200), nullable=False, index=True)
     other_id_source     = Column(VARCHAR(10), nullable=False)
@@ -426,8 +397,6 @@ class OtherID(Base):
 
 
 class Keyword(Base):
-    __tablename__ = "tbl_keyword"
-
     fk_pmid             = Column(INTEGER, nullable=False)
     keyword             = Column(VARCHAR(500), nullable=False, index=True)
     keyword_major_yn    = Column(CHAR(1), default='N')
@@ -457,8 +426,6 @@ class Keyword(Base):
 
 
 class SpaceFlight(Base):
-    __tablename__ = "tbl_space_flight_mission"
-
     fk_pmid                    = Column(INTEGER, nullable=False)
     space_flight_mission    = Column(VARCHAR(500), nullable=False)
 
@@ -478,8 +445,6 @@ class SpaceFlight(Base):
 
 
 class Investigator(Base):
-    __tablename__ = "tbl_investigator"
-
     id                          = Column(Integer, primary_key=True)
     fk_pmid                        = Column(INTEGER, nullable=False)
     last_name                   = Column(VARCHAR(300), index=True)
@@ -506,8 +471,6 @@ class Investigator(Base):
 
 
 class Notes(Base):
-    __tablename__ = "tbl_general_note"
-
     fk_pmid                = Column(INTEGER, nullable=False)
     general_note        = Column(VARCHAR(2000), nullable=False)
     general_note_owner  = Column(VARCHAR(20))
@@ -531,8 +494,6 @@ class Notes(Base):
 
 
 class Author(Base):
-    __tablename__ = "tbl_author"
-
     id                          = Column(Integer, primary_key=True)
     fk_pmid                        = Column(INTEGER, nullable=False, index=True)
     last_name                   = Column(VARCHAR(300), index=True)
@@ -572,8 +533,6 @@ class Author(Base):
 
 
 class Language(Base):
-    __tablename__ = "tbl_language"
-
     fk_pmid        = Column(INTEGER, nullable=False)
     language    = Column(VARCHAR(50), nullable=False)
 
@@ -592,8 +551,6 @@ class Language(Base):
 
 
 class DataBank(Base):
-    __tablename__ = "tbl_data_bank"
-
     fk_pmid                = Column(INTEGER, nullable=False)
     data_bank_name      = Column(VARCHAR(300), nullable=False)
 
@@ -612,9 +569,7 @@ class DataBank(Base):
 
 
 class Accession(Base):
-    __tablename__ = "tbl_accession_number"
-
-    fk_pmid                = Column(INTEGER, nullable=False)
+    fk_pmid             = Column(INTEGER, nullable=False)
     data_bank_name      = Column(VARCHAR(300), nullable=False, index=True)
     accession_number    = Column(VARCHAR(100), nullable=False, index=True)
 
@@ -634,8 +589,6 @@ class Accession(Base):
 
 
 class Grant(Base):
-    __tablename__ = "tbl_grant"
-
     id              = Column(Integer, primary_key=True)
     fk_pmid            = Column(INTEGER, nullable=False, index=True)
     grantid         = Column(VARCHAR(200), index=True)
@@ -660,8 +613,6 @@ class Grant(Base):
 
 
 class PublicationType(Base):
-    __tablename__ = "tbl_publication_type"
-
     fk_pmid                = Column(INTEGER, nullable=False)
     publication_type    = Column(VARCHAR(200), nullable=False)
 
@@ -679,8 +630,6 @@ class PublicationType(Base):
     citation = relation(Citation, backref=backref('publication_types', order_by=publication_type, cascade="all, delete-orphan"))
 
 class SupplMeshName(Base):
-    __tablename__ = "tbl_suppl_mesh_name"
-
     fk_pmid                 = Column(INTEGER, nullable=False)
     suppl_mesh_name         = Column(VARCHAR(80), nullable=False, index=True)
     suppl_mesh_name_ui      = Column(VARCHAR(10), nullable=False, index=True)
